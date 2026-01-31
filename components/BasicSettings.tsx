@@ -2,6 +2,7 @@
 
 import { Menu } from '@/types/menu';
 import { Plus, Trash2 } from 'lucide-react';
+import ColoredTextInput from './ColoredTextInput';
 
 interface Props {
   menu: Menu;
@@ -34,17 +35,17 @@ export default function BasicSettings({ menu, setMenu }: Props) {
           <label className="block text-sm font-medium mb-2">菜单标题</label>
           <div className="space-y-2">
             {menu.title.map((title, index) => (
-              <div key={index} className="flex gap-2">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => updateTitle(index, e.target.value)}
-                  className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-sky-400 focus:outline-none"
-                  placeholder="&b菜单标题"
-                />
+              <div key={index} className="flex gap-2 items-start">
+                <div className="flex-1">
+                  <ColoredTextInput
+                    value={title}
+                    onChange={(value) => updateTitle(index, value)}
+                    placeholder="&b菜单标题"
+                  />
+                </div>
                 <button
                   onClick={() => removeTitle(index)}
-                  className="minecraft-btn-danger px-3 py-2"
+                  className="minecraft-btn-danger px-3 py-2 mt-0"
                   disabled={menu.title.length <= 1}
                 >
                   <Trash2 size={16} />

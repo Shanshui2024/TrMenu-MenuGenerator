@@ -3,6 +3,9 @@
 import { Menu, Button } from '@/types/menu';
 import { Plus, Trash2, Edit } from 'lucide-react';
 import { useState } from 'react';
+import MaterialPicker from './MaterialPicker';
+import ColoredTextInput from './ColoredTextInput';
+import ActionSelector from './ActionSelector';
 
 interface Props {
   menu: Menu;
@@ -19,7 +22,7 @@ export default function ButtonEditor({ menu, setMenu }: Props) {
     if (newButtonId && !menu.buttons[newButtonId]) {
       const newButton: Button = {
         display: {
-          material: 'STONE',
+          material: 'stone',
           name: '&f新按钮',
           lore: ['&7点击执行操作'],
         },
@@ -124,6 +127,7 @@ interface ButtonFormProps {
 
 function ButtonForm({ buttonId, button, onUpdate }: ButtonFormProps) {
   const [activeSection, setActiveSection] = useState<'display' | 'actions'>('display');
+  const [showMaterialPicker, setShowMaterialPicker] = useState(false);
 
   const updateDisplay = (field: keyof Button['display'], value: any) => {
     onUpdate({
@@ -197,35 +201,50 @@ function ButtonForm({ buttonId, button, onUpdate }: ButtonFormProps) {
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium mb-1">材质</label>
-            <input
-              type="text"
-              value={button.display.material as string}
-              onChange={(e) => updateDisplay('material', e.target.value)}
-              placeholder="STONE"
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-sky-400 focus:outline-none"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={button.display.material as string}
+                onChange={(e) => updateDisplay('material', e.target.value.toLowerCase())}
+                placeholder="stone"
+                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-sky-400 focus:outline-none"
+              />
+              <button
+                onClick={() => setShowMaterialPicker(true)}
+                className="minecraft-btn px-3 py-2"
+              >
+                选择
+              </button>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">名称</label>
-            <input
-              type="text"
-              value={button.display.name as string || ''}
-              onChange={(e) => updateDisplay('name', e.target.value)}
-              placeholder="&f按钮名称"
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-sky-400 focus:outline-none"
-            />
-          </div>
+          <ColoredTextInput
+            label="名称"
+            value={button.display.name as string || ''}
+            onChange={(value) => updateDisplay('name', value)}
+            placeholder="&f按钮名称"
+          />
 
           <div>
             <label className="block text-sm font-medium mb-1">描述 (Lore)</label>
-            <textarea
+            <ColoredTextInput
               value={(button.display.lore as string[] || []).join('\n')}
-              onChange={(e) => updateDisplay('lore', e.target.value.split('\n'))}
+              onChange={(value) => {
+                // 分割成多行，并为没有颜色代码的行自动添加 &7
+                const lines = value.split('\n').map(line => {
+                  // 检查行是否已经有颜色代码（以 & 开头）
+                  if (line.trim() && !line.trim().startsWith('&')) {
+                    return '&7' + line;
+                  }
+                  return line;
+                });
+                updateDisplay('lore', lines);
+              }}
               placeholder="&7第一行&#10;&7第二行"
+              multiline
               rows={3}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white focus:border-sky-400 focus:outline-none font-mono text-sm"
             />
+            <p className="text-xs text-gray-500 mt-1">按回车换行，未指定颜色的行自动添加 &7</p>
           </div>
 
           <div>
@@ -274,21 +293,13 @@ function ButtonForm({ buttonId, button, onUpdate }: ButtonFormProps) {
                 </h5>
                 <div className="space-y-2">
                   {actions.map((action, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={action}
-                        onChange={(e) => updateAction(clickType.id, index, e.target.value)}
-                        placeholder="command: say Hello"
-                        className="flex-1 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-white font-mono text-xs focus:border-sky-400 focus:outline-none"
-                      />
-                      <button
-                        onClick={() => removeAction(clickType.id, index)}
-                        className="minecraft-btn-danger px-2 py-1"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
+                    <ActionSelector
+                      key={index}
+                      value={action}
+                      onChange={(value) => updateAction(clickType.id, index, value)}
+                      onRemove={() => removeAction(clickType.id, index)}
+                      placeholder="选择或输入点击动作"
+                    />
                   ))}
                 </div>
                 <button
@@ -313,6 +324,16 @@ function ButtonForm({ buttonId, button, onUpdate }: ButtonFormProps) {
             </ul>
           </div>
         </div>
+      )}
+
+      {showMaterialPicker && (
+        <MaterialPicker
+          onSelect={(material) => {
+            updateDisplay('material', material);
+            setShowMaterialPicker(false);
+          }}
+          onClose={() => setShowMaterialPicker(false)}
+        />
       )}
     </div>
   );

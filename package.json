@@ -6,22 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sprite": "node scripts/generate-sprite.js",
+    "fix-textures": "node scripts/fix-special-items.js",
+    "clean-assets": "node scripts/clean-assets.js"
   },
   "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lucide-react": "^0.316.0",
     "next": "14.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "js-yaml": "^4.1.0",
-    "lucide-react": "^0.316.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/js-yaml": "^4.0.9",
     "autoprefixer": "^10.0.1",
     "postcss": "^8",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

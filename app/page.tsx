@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MenuBuilder from '@/components/MenuBuilder';
 import YamlPreview from '@/components/YamlPreview';
 import { Menu } from '@/types/menu';
+import { preloadSprite } from '@/components/MinecraftSpriteIcon';
+import SpriteLoadingIndicator from '@/components/SpriteLoadingIndicator';
 
 export default function Home() {
   const [menu, setMenu] = useState<Menu>({
@@ -29,8 +31,15 @@ export default function Home() {
     }
   });
 
+  // 页面加载时立即预加载精灵图
+  useEffect(() => {
+    preloadSprite();
+  }, []);
+
   return (
     <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <SpriteLoadingIndicator />
+      
       <header className="text-center mb-8">
         <h1 className="text-5xl font-bold text-sky-600 mb-2 drop-shadow-lg">
           ⛏️ TrMenu 生成器

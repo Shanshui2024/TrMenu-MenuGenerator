@@ -3,6 +3,7 @@
 import { Menu } from '@/types/menu';
 import { Plus, Trash2, Code, Clock, Zap } from 'lucide-react';
 import { useState } from 'react';
+import ActionSelector from './ActionSelector';
 
 interface Props {
   menu: Menu;
@@ -93,21 +94,13 @@ function EventsEditor({ menu, setMenu }: Props) {
         <p className="text-sm text-gray-400 mb-3">菜单打开时执行的动作</p>
         <div className="space-y-2">
           {events.open?.map((action, index) => (
-            <div key={index} className="flex gap-2">
-              <input
-                type="text"
-                value={action}
-                onChange={(e) => updateEvent('open', index, e.target.value)}
-                placeholder="sound: ENTITY_PLAYER_LEVELUP"
-                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white font-mono text-sm focus:border-sky-400 focus:outline-none"
-              />
-              <button
-                onClick={() => removeEvent('open', index)}
-                className="minecraft-btn-danger px-3 py-2"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+            <ActionSelector
+              key={index}
+              value={action}
+              onChange={(value) => updateEvent('open', index, value)}
+              onRemove={() => removeEvent('open', index)}
+              placeholder="选择或输入打开事件动作"
+            />
           ))}
         </div>
         <button
@@ -127,21 +120,13 @@ function EventsEditor({ menu, setMenu }: Props) {
         <p className="text-sm text-gray-400 mb-3">菜单关闭时执行的动作</p>
         <div className="space-y-2">
           {events.close?.map((action, index) => (
-            <div key={index} className="flex gap-2">
-              <input
-                type="text"
-                value={action}
-                onChange={(e) => updateEvent('close', index, e.target.value)}
-                placeholder="command: say 关闭了菜单"
-                className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white font-mono text-sm focus:border-sky-400 focus:outline-none"
-              />
-              <button
-                onClick={() => removeEvent('close', index)}
-                className="minecraft-btn-danger px-3 py-2"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+            <ActionSelector
+              key={index}
+              value={action}
+              onChange={(value) => updateEvent('close', index, value)}
+              onRemove={() => removeEvent('close', index)}
+              placeholder="选择或输入关闭事件动作"
+            />
           ))}
         </div>
         <button
@@ -241,21 +226,13 @@ function TasksEditor({ menu, setMenu }: Props) {
               <label className="block text-sm font-medium mb-2">执行动作</label>
               <div className="space-y-2">
                 {task.actions.map((action, actionIndex) => (
-                  <div key={actionIndex} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={action}
-                      onChange={(e) => updateTaskAction(taskIndex, actionIndex, e.target.value)}
-                      placeholder="command: say 定时消息"
-                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white font-mono text-sm focus:border-sky-400 focus:outline-none"
-                    />
-                    <button
-                      onClick={() => removeTaskAction(taskIndex, actionIndex)}
-                      className="minecraft-btn-danger px-3 py-2"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                  <ActionSelector
+                    key={actionIndex}
+                    value={action}
+                    onChange={(value) => updateTaskAction(taskIndex, actionIndex, value)}
+                    onRemove={() => removeTaskAction(taskIndex, actionIndex)}
+                    placeholder="选择或输入任务动作"
+                  />
                 ))}
               </div>
               <button
