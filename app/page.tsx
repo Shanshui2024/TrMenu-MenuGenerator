@@ -1,0 +1,53 @@
+'use client';
+
+import { useState } from 'react';
+import MenuBuilder from '@/components/MenuBuilder';
+import YamlPreview from '@/components/YamlPreview';
+import { Menu } from '@/types/menu';
+
+export default function Home() {
+  const [menu, setMenu] = useState<Menu>({
+    title: ['&b我的菜单'],
+    titleUpdate: -1,
+    options: {
+      arguments: false,
+      defaultArguments: [],
+      defaultLayout: 0,
+      hidePlayerInv: false,
+      minClickDelay: 200,
+      dependExpansions: ['server', 'player']
+    },
+    layout: [
+      ['#########', '#       #', '#       #', '#       #', '#########']
+    ],
+    playerInventory: [
+      ['         ', '         ', '         ', '         ']
+    ],
+    buttons: {},
+    bindings: {
+      commands: []
+    }
+  });
+
+  return (
+    <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <header className="text-center mb-8">
+        <h1 className="text-5xl font-bold text-sky-600 mb-2 drop-shadow-lg">
+          ⛏️ TrMenu 生成器
+        </h1>
+        <p className="text-gray-700 text-lg">
+          为 Minecraft 服务器可视化创建 TrMenu 菜单配置
+        </p>
+      </header>
+
+      <div className="grid lg:grid-cols-2 gap-6">
+        <MenuBuilder menu={menu} setMenu={setMenu} />
+        <YamlPreview menu={menu} />
+      </div>
+
+      <footer className="mt-12 text-center text-gray-600 text-sm">
+        <p>基于 TrMenu 插件 | 支持 Minecraft 1.8-1.16+</p>
+      </footer>
+    </main>
+  );
+}
