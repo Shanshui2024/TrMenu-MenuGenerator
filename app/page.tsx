@@ -56,6 +56,12 @@ export default function Home() {
 
       <footer className="mt-12 text-center text-gray-600 text-sm">
         <p>基于 TrMenu 插件 | 支持 Minecraft 1.8-1.16+</p>
+        <br />
+        <p>© 2025-{new Date().getFullYear()} <a target='_blank' href='https://github.com/Shanshui2024/TrMenu-MenuGenerator'>TrMenu 生成器</a> | Powered By <a ></a>
+        <a href="https://v3.me.shanshui.site" target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:underline">
+          Shanshui-山重水复
+        </a>
+        </p>
       </footer>
     </main>
   );
