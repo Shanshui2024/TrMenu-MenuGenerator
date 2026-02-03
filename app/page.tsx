@@ -3,11 +3,14 @@
 import { useState, useEffect } from 'react';
 import MenuBuilder from '@/components/MenuBuilder';
 import YamlPreview from '@/components/YamlPreview';
+import YamlImporter from '@/components/YamlImporter';
 import { Menu } from '@/types/menu';
 import { preloadSprite } from '@/components/MinecraftSpriteIcon';
 import SpriteLoadingIndicator from '@/components/SpriteLoadingIndicator';
+import { Upload } from 'lucide-react';
 
 export default function Home() {
+  const [showImporter, setShowImporter] = useState(false);
   const [menu, setMenu] = useState<Menu>({
     title: ['&b我的菜单'],
     titleUpdate: -1,
@@ -36,6 +39,10 @@ export default function Home() {
     preloadSprite();
   }, []);
 
+  const handleImport = (importedMenu: Menu) => {
+    setMenu(importedMenu);
+  };
+
   return (
     <main className="container mx-auto px-4 py-8 max-w-7xl">
       <SpriteLoadingIndicator />
@@ -44,15 +51,29 @@ export default function Home() {
         <h1 className="text-5xl font-bold text-sky-600 mb-2 drop-shadow-lg">
           ⛏️ TrMenu 生成器
         </h1>
-        <p className="text-gray-700 text-lg">
+        <p className="text-gray-700 text-lg mb-4">
           为 Minecraft 服务器可视化创建 TrMenu 菜单配置
         </p>
+        <button
+          onClick={() => setShowImporter(true)}
+          className="minecraft-btn px-6 py-3 flex items-center gap-2 mx-auto"
+        >
+          <Upload size={20} />
+          导入 YAML 配置
+        </button>
       </header>
 
       <div className="grid lg:grid-cols-2 gap-6">
         <MenuBuilder menu={menu} setMenu={setMenu} />
         <YamlPreview menu={menu} />
       </div>
+
+      {showImporter && (
+        <YamlImporter
+          onImport={handleImport}
+          onClose={() => setShowImporter(false)}
+        />
+      )}
 
       <footer className="mt-12 text-center text-gray-600 text-sm">
         <p>基于 TrMenu 插件 | 支持 Minecraft 1.8-1.16+</p>
